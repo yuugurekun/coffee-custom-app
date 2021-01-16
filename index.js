@@ -14,12 +14,18 @@ const items = [
 // }
 
 async function createDivs() {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts")
-  const items = await res.json();
-  items.forEach(function (item) {
-    const div = createDiv(item);
-    main.appendChild(div);
-  });
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/posts")
+    const items = await res.json();
+    items.forEach(function (item) {
+      const div = createDiv(item);
+      main.appendChild(div);
+    });
+  } catch (error) {
+    console.log(error);
+    // sendLog(error)
+    main.textContent="読み込みに失敗しましたm(_ _)m"
+  }
 }
 
 // createDivという名前の処理
@@ -49,20 +55,24 @@ window.addEventListener("load" ,createDivs);
 
 // button押下時の処理
 button.addEventListener("click", async function() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
-    method: 'POST',
-    // オブジェクとを文字列に変換するのがstringify ~fyは〜化する
-    body: JSON.stringify({
-      title: input.value,
-      body: textarea.value,
-      userId: 1,
-    }),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-      "Authorization": ""
-    },
-  });
-  const data = await res.json();
-  const div = createDiv(data);
-  main.prepend(div);
+  try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      // オブジェクとを文字列に変換するのがstringify ~fyは〜化する
+      body: JSON.stringify({
+        title: input.value,
+        body: textarea.value,
+        userId: 1,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        "Authorization": ""
+      },
+    });
+    const data = await res.json();
+    const div = createDiv(data);
+    main.prepend(div);
+  } catch (error) {
+    alert("投稿に失敗しましたm(_ _)m");
+  }
 });
